@@ -24,7 +24,11 @@
                     <li class="nav-item"><a class="nav-link" href="#regras">Regras</a></li>
                     <li class="nav-item"><a class="nav-link" href="#transparencia">Transparência</a></li>
                     <li class="nav-item"><a class="nav-link" href="https://maoc-duster.lovable.app/">App Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#arquivopdf">Arquivo PDF</a></li>
+
+                    <!--<li class="nav-item"><a class="nav-link" href="#pdf-container">Arquivo PDF</a></li>-->
+
+                    <li class="nav-item"><button class="nav-link" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="SorteioDuster.pdf">Visualizar PDF</button></li>
+
                     <!--<li class="nav-item"><a class="nav-link" href="#suaopiniao">Sua Opinião</a></li>-->
                 </ul>
             </div>
@@ -234,9 +238,23 @@
         </div>
     </section>
 
-    <section id="arquivopdf" class="py-5 bg-white">
+    <!--<section id="arquivopdf" class="py-5 bg-white">
         <embed src="SorteioDuster.pdf" type="application/pdf" width="100%" height="600px"/>
-    </section>
+    </section>-->
+
+    <div class="modal fade" id="pdfModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content" style="height: 90vh;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Visualização de PDF</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe id="pdfFrame" src="" width="100%" height="100%" style="border: none;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer id="suaopiniao" class="py-5 bg-dark text-white text-center">
         <div class="container">
@@ -252,5 +270,30 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    // Aguarda o carregamento do DOM
+    document.addEventListener('DOMContentLoaded', function () {
+        const pdfModal = document.getElementById('pdfModal');
+        const pdfFrame = document.getElementById('pdfFrame');
+
+        // Evento disparado quando o modal começa a abrir
+        pdfModal.addEventListener('show.bs.modal', function (event) {
+            // Botão que acionou o modal
+            const button = event.relatedTarget;
+        
+            // Extrai a URL do atributo data-pdf (vamos adicionar isso ao botão)
+            const pdfUrl = button.getAttribute('data-pdf');
+        
+            // Atribui a URL ao src do iframe
+            pdfFrame.src = pdfUrl;
+        });
+
+        // Limpa o src quando o modal fechar (para parar áudios ou processamento)
+        pdfModal.addEventListener('hidden.bs.modal', function () {
+            pdfFrame.src = '';
+        });
+    });
+    </script>
 </body>
 </html>
