@@ -286,7 +286,7 @@
             const pdfUrl = button.getAttribute('data-pdf');
         
             // Atribui a URL ao src do iframe
-            pdfFrame.src = pdfUrl;
+            pdfFrame.src = "https://docs.google.com/viewer?url=" + pdfUrl + "&embedded=true";
         });
 
         // Limpa o src quando o modal fechar (para parar áudios ou processamento)
