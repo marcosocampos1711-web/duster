@@ -27,7 +27,7 @@
 
                     <!--<li class="nav-item"><a class="nav-link" href="#pdf-container">Arquivo PDF</a></li>-->
 
-                    <li class="nav-item"><button class="nav-link" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="SorteioDuster.pdf">Visualizar PDF</button></li>
+                    <li class="nav-item"><button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="SorteioDuster.pdf">Visualizar PDF</button></li>
 
                     <!--<li class="nav-item"><a class="nav-link" href="#suaopiniao">Sua Opinião</a></li>-->
                 </ul>
@@ -249,8 +249,8 @@
                     <h5 class="modal-title">Visualização de PDF</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-0">
-                    <iframe id="pdfFrame" src="" width="100%" height="100%" style="border: none;"></iframe>
+                <div class="modal-body p-0" style="overflow: hidden;">
+                    <iframe id="pdfFrame" width="100%" height="100%" style="border: none;"></iframe>
                 </div>
             </div>
         </div>
@@ -272,27 +272,39 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    // Aguarda o carregamento do DOM
-    document.addEventListener('DOMContentLoaded', function () {
-        const pdfModal = document.getElementById('pdfModal');
-        const pdfFrame = document.getElementById('pdfFrame');
+    document.getElementById('pdfModal').addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const pdfUrl = button.getAttribute('data-pdf');
+        const iframe = document.getElementById('pdfFrame');
+    
+        // Detecta se é dispositivo móvel (iOS ou Android)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        // Evento disparado quando o modal começa a abrir
-        pdfModal.addEventListener('show.bs.modal', function (event) {
-            // Botão que acionou o modal
-            const button = event.relatedTarget;
+        if (isMobile) {
+            // Opção A: Abrir diretamente em nova aba (Mais seguro para mobile)
+            // window.open(pdfUrl, '_blank'); 
         
-            // Extrai a URL do atributo data-pdf (vamos adicionar isso ao botão)
-            const pdfUrl = button.getAttribute('data-pdf');
-        
-            // Atribui a URL ao src do iframe
-            pdfFrame.src = "https://docs.google.com/viewer?url=" + pdfUrl + "&embedded=true";
-        });
+            // Opção B: Usar o visualizador do Google dentro do Iframe (Melhor experiência visual)
+            iframe.src = `https://docs.google.com/viewer?url=${window.location.origin}/${pdfUrl}&embedded=true`;
+        } else {
+            // Desktop: Usa o método de Blob que você criou (Privacidade e performance)
+            fetch(pdfUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    iframe.src = blobUrl;
 
-        // Limpa o src quando o modal fechar (para parar áudios ou processamento)
-        pdfModal.addEventListener('hidden.bs.modal', function () {
-            pdfFrame.src = '';
-        });
+                    this.addEventListener('hidden.bs.modal', () => {
+                        URL.revokeObjectURL(blobUrl);
+                        iframe.src = '';
+                    }, { once: true });
+                })
+                .catch(err => {
+                    console.error("Erro ao carregar PDF:", err);
+                    // Fallback simples caso o fetch falhe
+                    iframe.src = pdfUrl;
+                });
+        }
     });
     </script>
 </body>
