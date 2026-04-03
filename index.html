@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-
     <a href="https://wa.me/5579988027636?text=Favor me cadastrar como vendedor no aplicativo." class="whatsapp-float" target="_blank"><i class="bi bi-whatsapp"></i></a>
 
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
@@ -25,11 +24,7 @@
                     <li class="nav-item"><a class="nav-link" href="#transparencia">Transparência</a></li>
                     <li class="nav-item"><a class="nav-link" href="https://maoc-duster.lovable.app/">App Vendas</a></li>
 
-                    <!--<li class="nav-item"><a class="nav-link" href="#pdf-container">Arquivo PDF</a></li>-->
-
                     <li class="nav-item"><button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="SorteioDuster.pdf">Visualizar PDF</button></li>
-
-                    <!--<li class="nav-item"><a class="nav-link" href="#suaopiniao">Sua Opinião</a></li>-->
                 </ul>
             </div>
         </div>
@@ -256,14 +251,9 @@
         </div>
     </div>
 
-    <footer id="suaopiniao" class="py-3 bg-dark text-white text-center">
+    <footer class="py-3 bg-dark text-white text-center">
         <div class="container">
-            <h4 class="fw-bold mb-2 opacity-75">Valor médio do veículo | Tabela Fipe: R$ 53.168,00</h4>
-            <!--<div class="mb-4">
-                <a href="https://forms.gle/Y5WGbwDio2fwaNfEA" target="_blank" class="btn btn-outline-warning btn-lg px-5">ACESSAR PESQUISA DE OPINIÃO</a>
-                <a href="#" target="_blank" class="btn btn-outline-warning btn-lg px-5">ACESSAR PESQUISA DE OPINIÃO</a>
-            </div>
-            <p class="mb-5 opacity-75">Valor médio do veículo | Tabela Fipe: R$ 53.168,00</p>-->
+            <h4 class="fw-bold mb-2 opacity-75">Valor médio do veículo | Tabela Fipe R$ 53.168,00</h4>
             <hr class="border-secondary mb-3">
             <p class="small mb-0">Copyright © 2026 1º Tenente Marcos Antônio</p>
         </div>
@@ -272,40 +262,39 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    document.getElementById('pdfModal').addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const pdfUrl = button.getAttribute('data-pdf');
-        const iframe = document.getElementById('pdfFrame');
+        document.getElementById('pdfModal').addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const pdfUrl = button.getAttribute('data-pdf');
+            const iframe = document.getElementById('pdfFrame');
     
-        // Detecta se é dispositivo móvel (iOS ou Android)
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            // Detecta se é dispositivo móvel (iOS ou Android)
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        if (isMobile) {
-            // Opção A: Abrir diretamente em nova aba (Mais seguro para mobile)
-            // window.open(pdfUrl, '_blank'); 
-        
-            // Opção B: Usar o visualizador do Google dentro do Iframe (Melhor experiência visual)
-            iframe.src = `https://docs.google.com/viewer?url=${window.location.origin}/${pdfUrl}&embedded=true`;
-        } else {
-            // Desktop: Usa o método de Blob que você criou (Privacidade e performance)
-            fetch(pdfUrl)
-                .then(response => response.blob())
-                .then(blob => {
-                    const blobUrl = URL.createObjectURL(blob);
-                    iframe.src = blobUrl;
+            if (isMobile) {
+                // Opção A: Abrir diretamente em nova aba (Mais seguro para mobile)
+                // window.open(pdfUrl, '_blank'); 
+                // Opção B: Usar o visualizador do Google dentro do Iframe (Melhor experiência visual)
+                iframe.src = `https://docs.google.com/viewer?url=${window.location.origin}/${pdfUrl}&embedded=true`;
+            } else {
+                // Desktop: Usa o método de Blob que você criou (Privacidade e performance)
+                fetch(pdfUrl)
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob);
+                        iframe.src = blobUrl;
 
-                    this.addEventListener('hidden.bs.modal', () => {
-                        URL.revokeObjectURL(blobUrl);
-                        iframe.src = '';
-                    }, { once: true });
-                })
-                .catch(err => {
-                    console.error("Erro ao carregar PDF:", err);
-                    // Fallback simples caso o fetch falhe
-                    iframe.src = pdfUrl;
-                });
-        }
-    });
+                        this.addEventListener('hidden.bs.modal', () => {
+                            URL.revokeObjectURL(blobUrl);
+                            iframe.src = '';
+                        }, { once: true });
+                    })
+                    .catch(err => {
+                        console.error("Erro ao carregar PDF:", err);
+                        // Fallback simples caso o fetch falhe
+                        iframe.src = pdfUrl;
+                    });
+            }
+        });
     </script>
 </body>
 </html>
